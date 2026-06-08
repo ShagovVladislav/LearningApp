@@ -39,12 +39,12 @@ public class LessonRepository : ILessonRepository
 
     public async Task<Lesson> AddLesson(Lesson lesson)
     {
-        dbContext.Lessons.Add(lesson.ToDataModel());
+        var lessonModel = lesson.ToDataModel();
+        
+        dbContext.Lessons.Add(lessonModel);
         await dbContext.SaveChangesAsync();
 
-        var newLesson = await GetLesson(lesson.CourseId, lesson.Id);
-        
-        return newLesson ?? throw new NotFoundException("Lesson is not created");
+        return lessonModel.ToDomainModel();
     }
 
     public async Task<Lesson> UpdateLesson(Lesson lesson)
@@ -54,17 +54,18 @@ public class LessonRepository : ILessonRepository
             .Where(l => l.Id == lesson.Id)
             .FirstOrDefaultAsync();
 
-        if (lessonToUpdate != null)
+        if (lessonToUpdate is null)
         {
-            lessonToUpdate.Content = lesson.Content;
-            lessonToUpdate.Title = lesson.Title;
-            lessonToUpdate.Number = lesson.Number;
-
-            dbContext.Lessons.Update(lessonToUpdate);
+            throw new NotFoundException("Lesson not found");
         }
+
+        lessonToUpdate.ContentBlocks = lesson.ContentBlocks;
+        lessonToUpdate.Title = lesson.Title;
+        lessonToUpdate.Number = lesson.Number;
+        
         await dbContext.SaveChangesAsync();
         
-        return await GetLesson(lesson.CourseId, lesson.Id) ?? throw new NotFoundException("Lesson not found");
+        return lessonToUpdate.ToDomainModel();
     }
 
     public async Task DeleteLesson(Guid courseId, Guid lessonId)

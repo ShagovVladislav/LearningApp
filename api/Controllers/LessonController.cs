@@ -39,7 +39,7 @@ public class LessonController : ControllerBase
         
         return CreatedAtAction(
             nameof(GetLesson),
-            new {lessonId = lesson.Id},
+            new { courseId, lessonId = lesson.Id },
             lesson);
     }
     

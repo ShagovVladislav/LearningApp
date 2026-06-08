@@ -5,14 +5,24 @@ using LearningApp.api.Services;
 using LearningApp.api.Services.Interfaces;
 using LearningApp.api.Storage;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppDbContext>(options =>
+
+builder.Services.AddSingleton(_ =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
+    dataSourceBuilder.EnableDynamicJson();
+    return dataSourceBuilder.Build();
+});
+
+builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
+{
+    var dataSource = serviceProvider.GetRequiredService<NpgsqlDataSource>();
+    options.UseNpgsql(dataSource);
 });
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();

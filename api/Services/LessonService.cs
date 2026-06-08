@@ -61,7 +61,7 @@ public class LessonService : ILessonService
         return new LessonDto
         {
             Title = lesson.Title,
-            Content = lesson.Content,
+            ContentBlocks = lesson.ContentBlocks,
             Id = lesson.Id,
             Number = lesson.Number,
         };
@@ -73,7 +73,7 @@ public class LessonService : ILessonService
         {
             Id = lessonDto.Id,
             Title = lessonDto.Title,
-            Content = lessonDto.Content,
+            ContentBlocks = lessonDto.ContentBlocks,
             CourseId = courseId,
             Number =  lessonDto.Number,
         };
@@ -85,7 +85,7 @@ public class LessonService : ILessonService
         {
             Id = lessonId,
             Title = request.Title,
-            Content = request.Content,
+            ContentBlocks = request.ContentBlocks,
             Number = request.Number,
             CourseId = courseId,
         };

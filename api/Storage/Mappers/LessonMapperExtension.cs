@@ -11,7 +11,7 @@ public static class LessonMapperExtension
         {
             Id = lesson.Id,
             Title = lesson.Title,
-            Content = lesson.Content,
+            ContentBlocks = lesson.ContentBlocks.OrderBy(l => l.Order).ToList(),
             Number = lesson.Number,
             CourseId = lesson.CourseId
         };
@@ -23,7 +23,7 @@ public static class LessonMapperExtension
         {
             Id = model.Id,
             Title = model.Title,
-            Content = model.Content,
+            ContentBlocks = model.ContentBlocks.OrderBy(l => l.Order).ToList(),
             Number = model.Number,
             CourseId = model.CourseId,
         };

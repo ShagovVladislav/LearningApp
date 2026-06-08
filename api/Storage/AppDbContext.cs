@@ -35,10 +35,6 @@ public class AppDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(200);
 
-            entity.Property(lesson => lesson.Content)
-                .IsRequired()
-                .HasMaxLength(10000);
-
             entity.HasOne<CourseModel>()
                 .WithMany()
                 .HasForeignKey(lesson => lesson.CourseId)

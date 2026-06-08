@@ -25,7 +25,7 @@ public class CourseService : ICourseService
         return course;
     }
 
-    public async Task<CourseDto?> GetCourse(Guid id)
+    public async Task<CourseDto> GetCourse(Guid id)
     {
         var course = await _courseRepository.GetCourseByIdAsync(id);
         
@@ -66,16 +66,6 @@ public class CourseService : ICourseService
     public async Task DeleteCourse(Guid id)
     {
         await _courseRepository.DeleteCourseAsync(id);
-    }
-
-    private static Course DtoToCourse(CourseDto course)
-    {
-        return new Course
-        {
-            Id = course.CourseId,
-            Description = course.Description,
-            Title = course.Title,
-        };
     }
 
     private static CourseDto CourseToDto(Course course)
