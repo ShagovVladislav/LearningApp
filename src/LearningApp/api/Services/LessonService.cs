@@ -10,10 +10,12 @@ namespace LearningApp.api.Services;
 public class LessonService : ILessonService
 {
     private readonly ILessonRepository lessonRepository;
+    private readonly ICourseRepository courseRepository;
 
-    public LessonService(ILessonRepository lessonRepository)
+    public LessonService(ILessonRepository lessonRepository, ICourseRepository courseRepository)
     {
         this.lessonRepository = lessonRepository;
+        this.courseRepository = courseRepository;
     }
 
     public async Task<List<LessonDto>> GetLessons(Guid courseId)
@@ -45,6 +47,9 @@ public class LessonService : ILessonService
 
     public async Task<LessonDto> AddLesson(Guid courseId, CreateOrUpdateLessonRequest request)
     {
+        if (courseRepository.GetCourseByIdAsync(courseId).Result is null)
+            throw new NotFoundException("Course not found");
+        
         var lesson = GetLessonFromRequest(courseId, Guid.NewGuid(), request);
         var newLesson = await lessonRepository.AddLesson(lesson);
 
